@@ -37,7 +37,7 @@ public class DatabaseHandler implements IDataBaseHandler {
                 + "id VARCHAR(5), "
                 + "subject VARCHAR(100), "
                 + "grade DOUBLE, "
-                + "PRIMARY KEY (id, subject), "
+                + "PRIMARY KEY (id), "
                 + "FOREIGN KEY (id) REFERENCES students(id))";
             statement.execute(createGradesTable);
         }
