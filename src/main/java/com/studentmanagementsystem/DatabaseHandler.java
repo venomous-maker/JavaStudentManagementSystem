@@ -32,7 +32,7 @@ public class DatabaseHandler implements IDataBaseHandler {
 
             // Create 'students' table
             String createStudentsTable = "CREATE TABLE IF NOT EXISTS students ("
-                + "id VARCHAR(5) PRIMARY KEY, "
+                + "id VARCHAR(100) PRIMARY KEY, "
                 + "first_name VARCHAR(100), "
                 + "last_name VARCHAR(100), "
                 + "department VARCHAR(100), "
@@ -44,7 +44,7 @@ public class DatabaseHandler implements IDataBaseHandler {
                 + "id INT AUTO_INCREMENT, "
                 + "subject VARCHAR(100), "
                 + "grade DOUBLE, "
-                + "student, "
+                + "student VARCHAR(100), "
                 + "PRIMARY KEY (id), "
                 + "FOREIGN KEY (student) REFERENCES students(id))";
             statement.execute(createGradesTable);
