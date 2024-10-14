@@ -14,12 +14,30 @@ import javax.swing.table.*;
 public class MainWindow extends javax.swing.JPanel {
     IStudentManager studentManager;
     TimSort_ timSort;
+    private javax.swing.JFrame mainFrame;
     /**
      * Creates new form MainWindow
      */
-    public MainWindow(IStudentManager studentManager) {
+    public MainWindow(IStudentManager studentManager, javax.swing.JFrame frame_) {
         this.studentManager = studentManager;
-        initComponents();
+        this.mainFrame = frame_;
+        
+        if(!this.studentManager.isloggedIn())
+        {
+            // Create a new JFrame to hold the Login window
+            javax.swing.JFrame loginFrame = new javax.swing.JFrame("Login");
+            loginFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);  // Dispose the frame when closed
+            // Create an instance of the Login window
+            Login loginWindow = new Login(this.studentManager, loginFrame);
+            loginFrame.getContentPane().add(loginWindow);  // Add the Login window to the frame
+            loginFrame.pack();  // Pack the components
+            loginFrame.setLocationRelativeTo(null);  // Center the frame on the screen
+            loginFrame.setVisible(true);  // Make the frame visible 
+            this.mainFrame.dispose();
+        }
+        else {
+            initComponents();
+        }
     }
 
     /**

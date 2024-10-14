@@ -85,22 +85,36 @@ public class CS401prj {
         IDataBaseHandler databaseHandler = new DatabaseHandler("root", "*123*VYBZ");
         // Create a student manager object
         IStudentManager studentManager = new StudentManager(fileHandler, databaseHandler, false);
-        javax.swing.JFrame frame = new javax.swing.JFrame("Student Management");
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE); // Exit application when window is closed
-        frame.setSize( 1000, 440); // Set initial size of the window
+        if(!studentManager.isloggedIn())
+        {
+            
+            // Create a new JFrame to hold the Login window
+            javax.swing.JFrame loginFrame = new javax.swing.JFrame("Login");
+            loginFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);  // Dispose the frame when closed
+            // Create an instance of the Login window
+            Login loginWindow = new Login(studentManager, loginFrame);
+            loginFrame.getContentPane().add(loginWindow);  // Add the Login window to the frame
+            loginFrame.pack();  // Pack the components
+            loginFrame.setLocationRelativeTo(null);  // Center the frame on the screen
+            loginFrame.setVisible(true);  // Make the frame visible  
+        }
+        else{
+            javax.swing.JFrame frame = new javax.swing.JFrame("Student Management");
+            frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Exit application when window is closed
+            frame.setSize( 1000, 440); // Set initial size of the window
 
-        // Create an instance of the AddStudent panel
-        MainWindow mainWin = new MainWindow(studentManager);
+            // Create an instance of the AddStudent panel
+            MainWindow mainWin = new MainWindow(studentManager, frame);
 
-        // Add the AddStudent panel to the frame
-        frame.add( mainWin);
+            // Add the AddStudent panel to the frame
+            frame.getContentPane().add( mainWin);
 
-        // Center the frame on the screen
-        frame.setLocationRelativeTo(null);
+            // Center the frame on the screen
+            frame.setLocationRelativeTo(null);
 
-        // Make the frame visible
-        frame.setVisible(true);
-        
+            // Make the frame visible
+            frame.setVisible(true);
+        }
         //fileHandler.saveToFile("students.dat", studentManager);
         // Load student details from a file
         try{

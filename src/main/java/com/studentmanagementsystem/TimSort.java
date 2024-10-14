@@ -6,7 +6,7 @@ package com.studentmanagementsystem;
 
 /**
  *
- * @author Admin
+ * @author Morgan Okumu
  */
 
 import java.util.*;

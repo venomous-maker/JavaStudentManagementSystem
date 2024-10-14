@@ -21,4 +21,5 @@ public interface IStudentManager {
     public void registerUser(String username, String password) throws Exception;
     public void logout() throws Exception;
     public Map getAllStudents();
+    public boolean isloggedIn();
 }

@@ -3,17 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.studentmanagementsystem;
-
+import com.studentmanagementsystem.Interfaces.IStudentManager;
 /**
  *
  * @author v3n0m
  */
 public class Login extends javax.swing.JPanel {
-
+    private IStudentManager studentManager;
+    private javax.swing.JFrame mainFrame;
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login(IStudentManager studentManager, javax.swing.JFrame mainFrame) {
+        this.studentManager = studentManager;
+        this.mainFrame = mainFrame;
         initComponents();
     }
 
@@ -42,6 +45,11 @@ public class Login extends javax.swing.JPanel {
         });
 
         LoginButton.setText("Login");
+        LoginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginButtonActionPerformed(evt);
+            }
+        });
 
         PasswordField.setText("Password");
 
@@ -100,6 +108,40 @@ public class Login extends javax.swing.JPanel {
     private void UsernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsernameFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_UsernameFieldActionPerformed
+
+    private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
+        // TODO add your handling code here:
+        try{
+            if(UsernameField.getText().isEmpty() || PasswordField.getText().isEmpty()){
+                // Handle any exceptions (e.g., display an error message)
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: " + "Password or Username Field Blank.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            if(this.studentManager.login(UsernameField.getText(), PasswordField.getText())){
+                javax.swing.JFrame frame = new javax.swing.JFrame("Student Management");
+                frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE); // Exit application when window is closed
+                frame.setSize( 1000, 440); // Set initial size of the window
+
+                // Create an instance of the AddStudent panel
+                MainWindow mainWin = new MainWindow(this.studentManager, frame);
+
+                // Add the AddStudent panel to the frame
+                frame.getContentPane().add( mainWin);
+
+                // Center the frame on the screen
+                frame.setLocationRelativeTo(null);
+
+                // Make the frame visible
+                frame.setVisible(true);
+                this.mainFrame.dispose();
+            };
+        }
+        catch(Exception e)
+        {
+            // Handle any exceptions (e.g., display an error message)
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_LoginButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
