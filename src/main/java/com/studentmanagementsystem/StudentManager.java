@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 /**
  *
- * @author Admin
+ * @author Morgan Okumu
  */
 public class StudentManager implements IStudentManager {
     private Map<String, Student> studentMap = new HashMap<>();
