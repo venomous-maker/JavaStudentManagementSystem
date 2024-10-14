@@ -40,13 +40,14 @@ public class DatabaseHandler implements IDataBaseHandler {
             statement.execute(createStudentsTable);
 
             // Create 'grades' table
-            String createGradesTable = "CREATE TABLE IF NOT EXISTS grades ("
-                + "id INT AUTO_INCREMENT, "
-                + "subject VARCHAR(100), "
-                + "grade DOUBLE, "
-                + "student VARCHAR(100), "
-                + "PRIMARY KEY (id), "
-                + "FOREIGN KEY (student) REFERENCES students(id))";
+            String createGradesTable = "CREATE TABLE IF NOT EXISTS grades (" +
+                "    id INT AUTO_INCREMENT, " +
+                "    subject VARCHAR(100)," +
+                "    grade DOUBLE," +
+                "    student VARCHAR(100), " +
+                "    PRIMARY KEY (id), " +
+                "    FOREIGN KEY (student) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE" +
+                ")";
             statement.execute(createGradesTable);
         }
     }
