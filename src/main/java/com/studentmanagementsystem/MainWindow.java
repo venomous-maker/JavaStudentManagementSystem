@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.studentmanagementsystem;
+import com.studentmanagementsystem.Interfaces.IStudentManager;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.*;

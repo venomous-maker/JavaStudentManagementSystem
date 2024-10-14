@@ -3,6 +3,9 @@
  */
 
 package com.studentmanagementsystem;
+import com.studentmanagementsystem.Interfaces.IStudentManager;
+import com.studentmanagementsystem.Interfaces.IFileHandler;
+import com.studentmanagementsystem.Interfaces.IDataBaseHandler;
 import java.util.*;
 /**
  *
