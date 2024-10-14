@@ -159,4 +159,3 @@ public class DatabaseHandler implements IDataBaseHandler {
         return studentMap;
     }
 }
-
