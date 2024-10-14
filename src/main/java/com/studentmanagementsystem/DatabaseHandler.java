@@ -40,11 +40,12 @@ public class DatabaseHandler implements IDataBaseHandler {
 
             // Create 'grades' table
             String createGradesTable = "CREATE TABLE IF NOT EXISTS grades ("
-                + "id VARCHAR(5), "
+                + "id INT AUTO_INCREMENT, "
                 + "subject VARCHAR(100), "
                 + "grade DOUBLE, "
+                + "student, "
                 + "PRIMARY KEY (id), "
-                + "FOREIGN KEY (id) REFERENCES students(id))";
+                + "FOREIGN KEY (student) REFERENCES students(id))";
             statement.execute(createGradesTable);
         }
     }
@@ -63,7 +64,7 @@ public class DatabaseHandler implements IDataBaseHandler {
             studentStatement.executeUpdate();
 
             // Save grades
-            String gradesSql = "INSERT INTO grades (id, subject, grade) VALUES (?, ?, ?)";
+            String gradesSql = "INSERT INTO grades (student, subject, grade) VALUES (?, ?, ?)";
             PreparedStatement gradesStatement = connection.prepareStatement(gradesSql);
             for (Map.Entry<String, Double> entry : student.getGrades().getGradesMap().entrySet()) {
                 gradesStatement.setString(1, student.getId());
@@ -129,7 +130,7 @@ public class DatabaseHandler implements IDataBaseHandler {
     private Grades loadGradesFromDatabase(String studentId) throws Exception {
         createTablesIfNotExist();  // Ensure tables exist before fetching grades
         try (Connection connection = getConnection()) {
-            String gradesSql = "SELECT * FROM grades WHERE id = ?";
+            String gradesSql = "SELECT * FROM grades WHERE student = ?";
             PreparedStatement gradesStatement = connection.prepareStatement(gradesSql);
             gradesStatement.setString(1, studentId);
             ResultSet gradesResultSet = gradesStatement.executeQuery();
