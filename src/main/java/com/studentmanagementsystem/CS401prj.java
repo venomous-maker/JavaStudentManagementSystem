@@ -84,7 +84,7 @@ public class CS401prj {
         IFileHandler fileHandler = new FileHandler();
         IDataBaseHandler databaseHandler = new DatabaseHandler("root", "*123*VYBZ");
         // Create a student manager object
-        IStudentManager studentManager = new StudentManager(fileHandler, databaseHandler);
+        IStudentManager studentManager = new StudentManager(fileHandler, databaseHandler, false);
         javax.swing.JFrame frame = new javax.swing.JFrame("Student Management");
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE); // Exit application when window is closed
         frame.setSize( 1000, 440); // Set initial size of the window
