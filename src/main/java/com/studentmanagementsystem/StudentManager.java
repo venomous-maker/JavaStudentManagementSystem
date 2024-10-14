@@ -13,13 +13,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StudentManager implements IStudentManager {
     private Map<String, Student> studentMap = new HashMap<>();
     private IFileHandler fileHandler;
+    private IDataBaseHandler dbHandler; // Add database handler
     private final Object fileLock = new Object(); // Object for file access synchronization
 
-    public StudentManager(IFileHandler fileHandler) {
+    public StudentManager(IFileHandler fileHandler, IDataBaseHandler dbHandler) {
         this.fileHandler = fileHandler;
+        this.dbHandler = dbHandler;
         // Load student data from file when the StudentManager is instantiated
         try{
             loadStudentsFromFile();
+            loadStudentsFromDatabase(); 
             }
             catch
                     (Exception e){
@@ -35,7 +38,8 @@ public class StudentManager implements IStudentManager {
         } else {
             studentMap.put(student.getId(), student);   
             try{
-            saveStudentsToFile();
+                saveStudentsToFile();
+                saveStudentToDatabase(student);
             }
             catch
                     (Exception e){
@@ -51,6 +55,7 @@ public class StudentManager implements IStudentManager {
             studentMap.put(id, updatedStudent);
             try{
             saveStudentsToFile();
+            updateStudentInDatabase(id, updatedStudent);
             }
             catch
                     (Exception e){
@@ -67,6 +72,7 @@ public class StudentManager implements IStudentManager {
             studentMap.remove(id);
             try{
             saveStudentsToFile();
+            deleteStudentFromDatabase(id);
             }
             catch
                     (Exception e){
@@ -130,6 +136,41 @@ public class StudentManager implements IStudentManager {
             } catch (Exception e) {
                 System.out.println("Error loading students from file: " + e.getMessage());
             }
+        }
+    }
+    
+    // Method to save students to database
+    private void saveStudentToDatabase(Student student) {
+        try {
+            dbHandler.saveToDatabase(student);
+        } catch (Exception e) {
+            System.out.println("Error saving student to database: " + e.getMessage());
+        }
+    }
+
+    private void updateStudentInDatabase(String id, Student updatedStudent) {
+        try {
+            dbHandler.updateStudentInDatabase(id, updatedStudent);
+        } catch (Exception e) {
+            System.out.println("Error updating student in database: " + e.getMessage());
+        }
+    }
+
+    private void deleteStudentFromDatabase(String id) {
+        try {
+            dbHandler.deleteFromDatabase(id);
+        } catch (Exception e) {
+            System.out.println("Error deleting student from database: " + e.getMessage());
+        }
+        
+    }
+    // Method to load students from the database
+    private void loadStudentsFromDatabase() {
+        try {
+            Map<String, Student> loadedData = dbHandler.loadAllStudentsFromDatabase();
+            studentMap.putAll(loadedData);
+        } catch (Exception e) {
+            System.out.println("Error loading students from database: " + e.getMessage());
         }
     }
 

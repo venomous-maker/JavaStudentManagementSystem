@@ -13,9 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatabaseHandler implements IDataBaseHandler {
-
+    private String Password;
+    private String UserName;
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "*123*VYBZ");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/students", this.UserName, this.Password);
+    }
+    
+    public DatabaseHandler(String UserName, String Password){
+        this.Password = Password;
+        this.UserName = UserName;
     }
 
     // Method to create tables if they don't exist

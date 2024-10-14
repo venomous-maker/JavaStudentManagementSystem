@@ -363,7 +363,7 @@ public class MainWindow extends javax.swing.JPanel {
         // TODO add your handling code here:
         try{
             int random = Integer.parseInt(jTextFieldRandomInteger.getText());
-            studentManager = new StudentManager(new FileHandler());
+            //studentManager = new StudentManager(new FileHandler());
             RandomGenerator.generateRandomStudents(studentManager, random); // Generate and add 10 random students
             studentManager.viewAllStudents(); // View all generated students
         }
