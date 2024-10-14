@@ -16,6 +16,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StudentManager implements IStudentManager {
     private Map<String, Student> studentMap = new HashMap<>();
     private IFileHandler fileHandler;
+    private Map<String, User> registeredUsers = new HashMap<>(); // To keep track of registered users
+    private User loggedInUser; // To keep track of the currently logged-in user
     private Boolean useFileMode = true;
     private IDataBaseHandler dbHandler; // Add database handler
     private final Object fileLock = new Object(); // Object for file access synchronization
@@ -25,14 +27,70 @@ public class StudentManager implements IStudentManager {
         this.dbHandler = dbHandler;
         this.useFileMode = useFileMode;
         // Load student data from file when the StudentManager is instantiated
-        try{
-            if (this.useFileMode) loadStudentsFromFile();
-            else loadStudentsFromDatabase(); 
+         try {
+            if (this.useFileMode) {
+                loadStudentsFromFile();
+                loadUsersFromFile(); // Load users from file
+            } else {
+                loadStudentsFromDatabase();
+                loadUsersFromDatabase(); // Load users from database
             }
-            catch
-                    (Exception e){
-                //throw new Exception(e.getMessage());
+        } catch (Exception e) {
+            //throw new Exception("Error loading data: " + e.getMessage());
+        }
+    }
+    
+    // Login action
+    @Override
+    public boolean login(String username, String password) throws Exception {
+        if (registeredUsers.containsKey(username)) {
+            User user =  registeredUsers.get(username);
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                loggedInUser = user; // Set the logged-in user
+                return true; // Successful login
             }
+        }
+        throw new Exception("Login failed for user: " + username);
+    }
+    
+    @Override
+    public boolean isloggedIn(){
+        return this.loggedInUser != null;
+    }
+    // Register a new user
+    @Override
+    public void registerUser(String username, String password) throws Exception {
+        if (registeredUsers.containsKey(username)) {
+            throw new Exception("Username already exists.");
+        }
+        registeredUsers.put(username,  new User(username, password));
+        if(!this.useFileMode) this.dbHandler.saveUserToDatabase(username, password);
+        else saveUsers(); // Save updated users after registration
+        throw new Exception("User registered successfully: " + username);
+    }
+    
+    // Logout action
+    @Override
+    // Logout action
+    public void logout() throws Exception {
+        if (loggedInUser != null) {
+            String temp = loggedInUser.getUsername();
+            loggedInUser = null; // Clear the logged-in user
+            System.out.println("User logged out: " + temp);
+        } else {
+            throw new Exception("No user is currently logged in.");
+        }
+    }
+    
+    // Save users to file
+    private void saveUsers() {
+        synchronized (fileLock) {
+            try {
+                fileHandler.saveToFile("users.dat", registeredUsers); // Save registered users to file
+            } catch (Exception e) {
+                System.out.println("Error saving users to file: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -51,6 +109,38 @@ public class StudentManager implements IStudentManager {
                 throw new Exception(e.getMessage());
             }
             
+        }
+    }
+    
+    // Load users from database
+    private void loadUsersFromDatabase() {
+        try {
+            registeredUsers = dbHandler.loadAllUsersFromDatabase();
+        } catch (Exception e) {
+            System.out.println("Error loading users from database: " + e.getMessage());
+        }
+    }
+    
+    // Load users from file
+    private void loadUsersFromFile() {
+        synchronized (fileLock) {
+            try {
+                Map<String, User> loadedUsers = (Map<String, User>) fileHandler.loadFromFile("users.dat");
+                if (loadedUsers != null) {
+                    registeredUsers.putAll(loadedUsers);
+                }
+            } catch (Exception e) {
+                System.out.println("Error loading users from file: " + e.getMessage());
+            }
+        }
+    }
+
+    // Save users to database (this should be called after registration)
+    private void saveUsersToDatabase() {
+        try {
+            dbHandler.saveUsersToDatabase(registeredUsers);
+        } catch (Exception e) {
+            System.out.println("Error saving users to database: " + e.getMessage());
         }
     }
 

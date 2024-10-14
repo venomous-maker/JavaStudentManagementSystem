@@ -17,5 +17,8 @@ public interface IStudentManager {
     void removeStudent(String id) throws Exception;
     Student getStudentById(String id) throws Exception;
     void viewAllStudents();
+    boolean login(String username, String password) throws Exception;
+    public void registerUser(String username, String password) throws Exception;
+    public void logout() throws Exception;
     public Map getAllStudents();
 }

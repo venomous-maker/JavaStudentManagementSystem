@@ -4,6 +4,7 @@
  */
 package com.studentmanagementsystem.Interfaces;
 import com.studentmanagementsystem.Student;
+import com.studentmanagementsystem.User;
 import java.util.*;
 /**
  *
@@ -15,4 +16,7 @@ public interface IDataBaseHandler {
     void deleteFromDatabase(String id) throws Exception;
     Student loadStudentFromDatabase(String id) throws Exception;
     Map<String, Student> loadAllStudentsFromDatabase() throws Exception;
+    void saveUserToDatabase(String username, String password) throws Exception;
+    Map<String, User> loadAllUsersFromDatabase() throws Exception;
+    void saveUsersToDatabase(Map<String, User> users) throws Exception;
 }

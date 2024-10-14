@@ -49,8 +49,87 @@ public class DatabaseHandler implements IDataBaseHandler {
                 "    FOREIGN KEY (student) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE" +
                 ")";
             statement.execute(createGradesTable);
+            
+            // Create 'users' table
+            String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
+                    + "username VARCHAR(100) PRIMARY KEY, "
+                    + "password VARCHAR(100))";
+            statement.execute(createUsersTable);
         }
     }
+    
+     // Save a user to the database
+    @Override
+    public void saveUserToDatabase(String username, String password) throws Exception {
+        try (Connection connection = getConnection()) {
+            String userSql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            PreparedStatement userStatement = connection.prepareStatement(userSql);
+            userStatement.setString(1, username);
+            userStatement.setString(2, password);
+            userStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error saving user: " + e.getMessage());
+            throw new Exception("Failed to save user: " + username);
+        }
+    }
+    
+    @Override
+    public void saveUsersToDatabase(Map<String, User> users) throws Exception {
+        try (Connection connection = getConnection()) {
+            String userSql = "INSERT INTO users (username, password) VALUES (?, ?) ON DUPLICATE KEY UPDATE password = ?";  // Query to insert or update users
+            PreparedStatement userStatement = connection.prepareStatement(userSql);
+
+            // Iterate through the map and save each user to the database
+            for (Map.Entry<String, User> entry : users.entrySet()) {
+                String username = entry.getKey();
+                String password = entry.getValue().getPassword();
+
+                // Set values for the prepared statement
+                userStatement.setString(1, username);
+                userStatement.setString(2, password);
+                userStatement.setString(3, password);  // In case of duplicate, update password
+
+                userStatement.addBatch();  // Add to batch for bulk execution
+            }
+
+            // Execute the batch of insert/update commands
+            userStatement.executeBatch();
+        } catch (SQLException e) {
+            System.out.println("Error saving users: " + e.getMessage());
+            throw new Exception("Failed to save users to the database.");
+        }
+    }
+
+
+    // Load a user by username
+    @Override
+    public Map<String, User> loadAllUsersFromDatabase() throws Exception {
+        Map<String, User> usersMap = new HashMap<>();  // To store all users
+
+        try (Connection connection = getConnection()) {
+            String userSql = "SELECT * FROM users";  // Query to get all users
+            Statement userStatement = connection.createStatement();
+            ResultSet userResultSet = userStatement.executeQuery(userSql);
+
+            // Iterate through the result set and populate the map
+            while (userResultSet.next()) {
+                String username = userResultSet.getString("username");
+                String password = userResultSet.getString("password");
+
+                // Create a new User object
+                User user = new User(username, password);
+
+                // Add user to the map with username as key
+                usersMap.put(username, user);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error loading users: " + e.getMessage());
+            throw new Exception("Failed to load users from the database.");
+        }
+
+        return usersMap;  // Return the map containing all users
+    }
+
 
     @Override
     public void saveToDatabase(Student student) throws Exception {
