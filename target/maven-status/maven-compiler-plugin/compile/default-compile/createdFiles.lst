@@ -12,8 +12,10 @@ com/studentmanagementsystem/BinarySearch.class
 com/studentmanagementsystem/MainWindow$4.class
 com/studentmanagementsystem/MainWindow.class
 com/studentmanagementsystem/TimSort.class
+com/studentmanagementsystem/IDataBaseHandler.class
 com/studentmanagementsystem/AddStudent$5.class
 com/studentmanagementsystem/MainWindow$9.class
+com/studentmanagementsystem/DatabaseHandler.class
 com/studentmanagementsystem/TernarySearch.class
 com/studentmanagementsystem/IFileHandler.class
 com/studentmanagementsystem/AddStudent$2.class
