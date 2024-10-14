@@ -16,16 +16,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StudentManager implements IStudentManager {
     private Map<String, Student> studentMap = new HashMap<>();
     private IFileHandler fileHandler;
+    private Boolean useFileMode = true;
     private IDataBaseHandler dbHandler; // Add database handler
     private final Object fileLock = new Object(); // Object for file access synchronization
 
-    public StudentManager(IFileHandler fileHandler, IDataBaseHandler dbHandler) {
+    public StudentManager(IFileHandler fileHandler, IDataBaseHandler dbHandler, Boolean useFileMode) {
         this.fileHandler = fileHandler;
         this.dbHandler = dbHandler;
+        this.useFileMode = useFileMode;
         // Load student data from file when the StudentManager is instantiated
         try{
-            loadStudentsFromFile();
-            loadStudentsFromDatabase(); 
+            if (this.useFileMode) loadStudentsFromFile();
+            else loadStudentsFromDatabase(); 
             }
             catch
                     (Exception e){
@@ -41,8 +43,8 @@ public class StudentManager implements IStudentManager {
         } else {
             studentMap.put(student.getId(), student);   
             try{
-                saveStudentsToFile();
-                saveStudentToDatabase(student);
+                if (this.useFileMode) saveStudentsToFile();
+                else saveStudentToDatabase(student);
             }
             catch
                     (Exception e){
@@ -57,8 +59,8 @@ public class StudentManager implements IStudentManager {
         if (studentMap.containsKey(id)) {
             studentMap.put(id, updatedStudent);
             try{
-            saveStudentsToFile();
-            updateStudentInDatabase(id, updatedStudent);
+            if (this.useFileMode) saveStudentsToFile();
+            else updateStudentInDatabase(id, updatedStudent);
             }
             catch
                     (Exception e){
@@ -74,8 +76,8 @@ public class StudentManager implements IStudentManager {
         if (studentMap.containsKey(id)) {
             studentMap.remove(id);
             try{
-            saveStudentsToFile();
-            deleteStudentFromDatabase(id);
+            if (this.useFileMode) saveStudentsToFile();
+            else deleteStudentFromDatabase(id);
             }
             catch
                     (Exception e){
@@ -99,7 +101,8 @@ public class StudentManager implements IStudentManager {
     {
         try{
             //saveStudentsToFile();
-            loadStudentsFromFile();
+            if (this.useFileMode) loadStudentsFromFile();
+            else loadStudentsFromDatabase();
             }
             catch
                     (Exception e){
