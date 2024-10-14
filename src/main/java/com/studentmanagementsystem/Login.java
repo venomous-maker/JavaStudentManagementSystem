@@ -58,6 +58,11 @@ public class Login extends javax.swing.JPanel {
         PasswordLabel.setText("Password");
 
         RegisterButton.setText("Register");
+        RegisterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RegisterButtonActionPerformed(evt);
+            }
+        });
 
         LoginPage.setText("LOGIN PAGE");
         LoginPage.setToolTipText("");
@@ -142,6 +147,25 @@ public class Login extends javax.swing.JPanel {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_LoginButtonActionPerformed
+
+    private void RegisterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterButtonActionPerformed
+        // TODO add your handling code here:
+        try{
+            if(UsernameField.getText().isEmpty() || PasswordField.getText().isEmpty()){
+                // Handle any exceptions (e.g., display an error message)
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: " + "Password or Username Field Blank.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                this.studentManager.registerUser(UsernameField.getText(), PasswordField.getText());
+            };
+        }
+        catch(Exception e)
+        {
+            // Handle any exceptions (e.g., display an error message)
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_RegisterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
